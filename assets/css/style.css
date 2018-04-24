@@ -74,10 +74,44 @@ width: 200px;
 }
 
 .heroArea {
-	width: 200px;
+	width: 150px;
 	height: 400px;
-	border: 1px solid rgb(22, 233, 22);
 	float: right;
+	margin-right: 50px;
+}
+
+.heroFront {
+	float: left;
+	margin-right: 20px;
+}
+
+.heroBack {
+	float: right;
+	margin-right: 20px;
+}
+
+.character {
+	height: 50px;
+	width: 50px;
+	border: 3px solid rgb(253, 226, 71);
+	margin: auto;
+
+}
+
+.kain {
+	margin-top: 120px;
+}
+
+.cloud {
+	margin-top: 180px;
+}
+
+.gilg {
+	margin-top: 40px;
+}
+
+.golbez {
+	margin-top: 60px;
 }
 
 .demonArea {
@@ -96,21 +130,13 @@ width: 200px;
 	background: linear-gradient(60deg, rgb(26, 85, 161) 0%, rgba(17, 137, 207, 0.671) 35%);
 }
 
-.character {
-	height: 50px;
-	width: 50px;
-	border: 3px solid rgb(253, 226, 71);
-	margin: auto;
-	margin-top: 40px;
 
-}
 
 .enemy {
-	height: 220px;
-	width: 220px;
-	border: 3px solid rgb(253, 226, 71);
+	height: 320px;
+	width: 320px;
 	margin: auto;
-	margin-top: 150px;
+	margin-top: 50px;
 
 }
 
@@ -123,13 +149,6 @@ width: 200px;
 	text-align: center;
 }
 
-.badguy {
-		height: 300px;
-	width: 300px;
-	border: 3px solid rgb(253, 226, 71);
-	margin: auto;
-	margin-top: 20px;
-}
 
 #moveset {
 	height: 50px;
@@ -137,4 +156,11 @@ width: 200px;
 	border: 3px solid rgb(253, 226, 71);
 	margin-left: 400px;
 	margin-top: 20px;
+}
+
+.hitPoints{
+	font-size: 1.8em;
+	color: aliceblue;
+	padding-left: 100px;
+	padding-top: 40px;
 }
