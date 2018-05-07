@@ -18,14 +18,14 @@ Incorporate Firebase for multiplayer, both versus mode and team mode (If time pe
 ----------------------------------------------------------------
 Timeline
 
-begin with base working off of RPG Solution. 
+develop a CSS Framework
+
+JS begins with working off of RPG Solution as a base. 
 
 start with adding 2 player characters in combat at once from the characters array. 
 Scale up once this is functioning.
 
 Implement timers during this process. 
-
-Navigation will include reset/return to start screen
 
 Create seperate array for enemies.
 (Versus mode will be based on the already existing game however the display layout will change for each user swapping
