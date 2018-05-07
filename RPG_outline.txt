@@ -1,0 +1,36 @@
+Create variables for and designate multiple attacker actions.
+
+Choose two APIs to creatively incorporate (Exp: Weather API that changes background according to users location)
+Potential APIs:
+YouTube API
+Google Maps (for user location)
+World Clock API (For time)
+Facebook API (for score sharing)
+HearthstoneJSON API (Possible use of scraping Hearthstone data for character generation, requires a lot of research because I don't know anything about Hearthstone)
+Poke API (Alternative to Hearthstone)
+Discord API (for voice chat)
+
+
+Adapt var turnCount to to be individual player characters speed utilizing a time out function. 
+
+Incorporate Firebase for multiplayer, both versus mode and team mode (If time permits)
+
+----------------------------------------------------------------
+Timeline
+
+begin with base working off of RPG Solution. 
+
+start with adding 2 player characters in combat at once from the characters array. 
+Scale up once this is functioning.
+
+Implement timers during this process. 
+
+Create seperate array for enemies.
+(Versus mode will be based on the already existing game however thedisplay layout will change for each user swapping
+the position of the characters on the battlefield. Seperate array will need to be created for displaying a different image of
+the opposing players character.  
+
+If Hearthstone API provides chracater statistics for that game use that data to generate enemy stats
+(Alternatively Poke API could be used for the same thing and is simpler)
+
+
