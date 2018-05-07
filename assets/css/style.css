@@ -142,21 +142,37 @@ body {
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-position: center;
+	border: 2px solid red;
+	color: blueviolet;
+}
+
+.container {
+	width: 960px;
+	height: 600px;
+	border: 5px solid rgba(247, 243, 231, 0.938);
+	border-radius: 10px;
+	margin: auto;
+	margin-top: 40px;
+	background-image: url(../images/castle.png);
+	background-size: 960px 600px;
 }
 
 img {
 	width: 150px;
 	height: 100px;
 	border-radius: 10px;
+	border: 2px solid red;
 }
 
 .section-title {
 	font-size: 200%;
+	border: 2px solid red;
 }
 
 .main-section-title {
 	font-size: 300%;
 	text-align: center;
+	border: 2px solid red;
 }
 
 .character {
@@ -166,6 +182,7 @@ img {
 	border-color: green;
 	border-style: solid;
 	border-width: 3px;
+	border: 2px solid red;
 }
 
 .character-image {
@@ -174,14 +191,17 @@ img {
 	margin-top: 3px;
 	margin-bottom: 3px;
 	height: 200px;
+	border: 2px solid red;
 }
 
 .character-name {
 	text-align: center;
+	border: 2px solid red;
 }
 
 .character-health {
 	text-align: center;
+	border: 2px solid red;
 }
 
 #available-to-attack-section .character {
@@ -191,6 +211,7 @@ img {
 	border-color: black;
 	border-style: solid;
 	border-width: 1px;
+	border: 2px solid red;
 }
 
 .enemy {
@@ -200,52 +221,104 @@ img {
 	border-color: black;
 	border-style: solid;
 	border-width: 1px;
+	border: 2px solid red;
 }
 
 #action .character {
 	color: white;
 	background-color: black;
+	border: 2px solid red;
 }
 
 .target-enemy {
 	color: white;
 	background-color: black;
+	border: 2px solid red;
 }
 
+/*--Hero Area, styling pertains to anything within player characters area--*/
+
 #selected-character {
-	width: 190px;
+	width: 100%;
 	height: 160px;
+	border: 2px solid red;
+}
+
+#selected-character-section {
+	width: 100%;
+	border: 2px solid rgb(123, 255, 0);
+	height: 400px;
+}
+
+.heroArea {
+	width: 150px;
+	height: 400px;
+	float: right;
+	margin-right: 50px;
 }
 
 #attacker {
 	width: 190px;
 	height: 160px;
+	border: 2px solid red;
 }
+
+/*--End Hero Area-------------------------------------------------------*/
+
+/*--Enemy  area---------------------------------------------------------*/
+.enemy-section {
+	width: 20%;
+	border: 2px solid rgb(123, 255, 0);
+	width: 150px;
+	height: 400px;
+	float: left;
+	margin-left: 50px;
+}
+
+
 
 #defender {
 	width: 190px;
 	height: 160px;
+	border: 2px solid red;
 }
 
 #defender-name {
 	text-align: center;
+	border: 2px solid red;
 }
 
 #defender-health {
 	text-align: center;
+	border: 2px solid red;
 }
+
+/*--End Enemy  area------------------------------------------------------*/
 
 #choose-enemy-button {
 	visibility: hidden;
+	border: 2px solid red;
 }
 
+
+/*----Menu--------------------------------------------------------------*/
 #restart-button {
 	visibility: hidden;
+	border: 2px solid red;
 }
 
 #turn-counter {
 	font-size: 150%;
+	border: 2px solid red;
 }
+
+#attack-button {
+
+}
+
+/*----Menu End----------------------------------------------------------*/
+
+
 
 /*
 body {
