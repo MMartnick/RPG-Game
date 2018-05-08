@@ -214,6 +214,25 @@ nav {
 	border: 2px solid rgb(0, 255, 136);*/
 }
 
+#selected-characters {
+	width: 20%;
+	height: 80%;
+	float: right;
+	margin: auto;
+	margin-top: 1%;
+	border: 2px solid rgb(0, 4, 255);
+}
+
+.select-button-contain {
+	width: 40%;
+	margin: auto;
+	margin-top: 2%;
+	text-align: center;
+	padding-top: 1%;
+	padding-bottom: 1%;
+	border: 2px solid red;*/
+}
+
 /*-------------End Character Select----------------------------------*/
 
 /*-------------Combat Arena Styles-----------------------------------*/
@@ -274,3 +293,16 @@ nav {
 	padding-bottom: 1%;
 	border: 2px solid rgb(225, 0, 255);
 }
+
+.moveset-container {
+	width: 13%;
+	height: 80%;
+	margin: auto;
+	margin-top: .5%;
+	margin-left: 57%;
+	padding-top: 1%;
+	padding-bottom: 1%;
+	border: 2px solid rgb(255, 196, 0);
+}
+
+/*-------------End Combat Arena--------------------------------------*/
