@@ -10,28 +10,50 @@
 
 <body>
 
-	<nav>Navigation</nav>
+	<nav>
+		<!--id="currentDateTime"-Only needed for testing to ensure the data appears, will be removed once data is parse and the function is working properly-->
+		NavBar
+	</nav>
 	<div class="container">
 		<section id="game-start-screen">
+			<!--To align everything properly each section will need to be detatched/returned using JS not hidden-->
 			<article class="logo"></article>
 			<article class="start-menu">
-
+				<p class="menu-item">
+					<button id="start-game">Start Game</button>
+				</p>
 			</article>
 
 		</section>
 
-		<section id="team-character-select"></section>
+		<section id="team-character-select">
+			<p class="menu-item"><button id="char-select">Char Select</button></p>
+			<div class="player-characters"></div>
+		</section>
 
 		<section id="combat-arena">
-			<article id="player-section"></article>
-			<article id="enemy-section"></article>
-			<article id="combat-menu"></article>
+			<article id="player-section">
+				<div class="player-characters" id="attacker-one"></div>
+				<div class="player-characters" id="attacker-two"></div>
+				<div class="player-characters" id="attacker-three"></div>
+				<div class="player-characters" id="attacker-four"></div>
+			</article>
+
+			<article id="enemy-section">
+				<div class="enemy-characters" id="enemy-one"></div>
+			</article>
+			<article id="combat-menu">
+
+				<button id="end-match">End Match</button>
+			</article>
+
+
 		</section>
 
 	</div>
 
 
-		<script src="assets/javascript/game.js"></script>
+	<script src="assets/javascript/game.js"></script>
 </body>
 
 </html>

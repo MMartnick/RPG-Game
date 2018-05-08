@@ -41,7 +41,6 @@ $(document).ready(function () {
 
 	// will be populated when player selects a character
 	var attacker;
-	var attacker2;
 	// populated with all the unselected characters
 	var combatants = [];
 	//will be populated when player chooses an opponent
@@ -138,7 +137,6 @@ $(document).ready(function () {
 		if (!attacker) {
 			// we populate attacker with the selected characters and push them to the combatants array
 			attacker = characters[name];
-			attacker2 = characters[name]
 			// we then loop through the remaining characters and push them to the combatants array
 			for (var key in characters) {
 			if (key !== name) {
@@ -150,7 +148,7 @@ $(document).ready(function () {
 			$("#characters-section").hide();
 
 			// then render our selected character and our combatants
-			updateCharacter(attacker, attacker2, "#selected-character");
+			updateCharacter(attacker,"#selected-character");
 			renderEnemies(combatants);
 		}
 	});
@@ -182,7 +180,6 @@ $(document).ready(function () {
 
 			// Reduce defender's health by your attack value.
 			defender.health -= attacker.attack * turnCounter;
-			defender.health -= attacker2.attack * turnCounter;
 			// If the enemey st has health
 			if (defender.health > 0) {
 				// Render the enemy's updated character card.

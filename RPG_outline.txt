@@ -25,7 +25,7 @@ Scale up once this is functioning.
 
 Implement timers during this process. 
 
-Navigation will include reset/return to start screen
+End battle will include reset/return to start screen
 
 Create seperate array for enemies.
 (Versus mode will be based on the already existing game however the display layout will change for each user swapping
@@ -39,6 +39,11 @@ If Hearthstone API provides chracater statistics for that game use that data to 
 
 In this case an array for images based on enemy type would have to be created
 brief example:
-If enemy is Fire type display random fire type enemy image and pull data from the API regarding strength, defense, agility etc.
+If enemy is Fire type display random fire like enemy image and pull data from the API regarding strength, defense, agility etc.
 ----
+
+Task #1 - Use JS to detach/return each section of the main HTML;
+
+Task #2 - Create character/ enemy objects.
+(For enemy object implement API #1)
 
