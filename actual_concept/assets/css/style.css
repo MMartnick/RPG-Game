@@ -265,11 +265,7 @@ nav {
 	border: 2px solid rgb(225, 0, 255);
 }
 
-.player-characters {
-	width: 90px;
-	height: 90px;
-	border: 2px solid rgb(0, 255, 136);*/
-}
+
 
 #enemy-section {
 	float: left;
@@ -313,6 +309,12 @@ nav {
 	padding-top: 1%;
 	padding-bottom: 1%;
 	border: 2px solid rgb(255, 196, 0);
+}
+
+.fight {
+	height: 20px;
+	width: 30px;
+	background-color: blue;
 }
 
 /*-------------End Combat Arena--------------------------------------*/

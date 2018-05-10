@@ -7,11 +7,11 @@ $(document).ready(function () {
 		// Kain is the model that all character objects will be based on
 		// once his stats and moveset are functioning the rest will adapt 
 		// the same set up with variations 
-		"Kain Highwind": {
-			name: "Kain Highwind",
+		"Kain": {
+			name: "Kain",
 			health: 120,
 			strength: 8,
-			imageUrl: "../images/kainSml.png",
+			imageUrl: "assets/images/kainSml.png",
 			enemyAttackBack: 15,
 			moveSet: {
 				attack: 8,
@@ -28,7 +28,7 @@ $(document).ready(function () {
 			name: "Cloud Strife",
 			health: 120,
 			attack: 8,
-			imageUrl: "../images/cloudSml.png",
+			imageUrl: "assets/images/cloudSml.png",
 			enemyAttackBack: 15
 		},
 
@@ -36,7 +36,7 @@ $(document).ready(function () {
 			name: "Gilgamesh",
 			health: 120,
 			attack: 8,
-			imageUrl: "../images/gilgSml.png",
+			imageUrl: "assets/images/gilgSml.png",
 			enemyAttackBack: 15
 		},
 
@@ -44,10 +44,9 @@ $(document).ready(function () {
 			name: "Golbez",
 			health: 120,
 			attack: 8,
-			imageUrl: "../assets/images/golbezSml.png",
+			imageUrl: "assets/images/golbezSml.png",
 			enemyAttackBack: 15
 		},
-
 	};
 
 	var enemyCharacters = {
@@ -55,7 +54,7 @@ $(document).ready(function () {
 			name: "Kefka",
 			health: 120,
 			attack: 8,
-			imageUrl: "../images/kefka.png",
+			imageUrl: "assets/images/kefka.png",
 			enemyAttackBack: 15
 		},
 
@@ -63,12 +62,9 @@ $(document).ready(function () {
 	};
 
 	// will be populated when player selects a character team
-	var attacker1;
-	var attacker2;
-	var attacker3;
-	var attacker4;
-
-	var party = [attacker1, attacker2, attacker3, attacker4, ];
+	var dude;
+	var counter = 4;
+	var party = []; // 4
 	var unUsed = [];
 
 
@@ -92,6 +88,11 @@ $(document).ready(function () {
 		var charHealth = $("<div class='character-health'>").text(character.health);
 		charDiv.append(charName).append(charImage).append(charHealth);
 		$(renderArea).append(charDiv);
+	};
+
+	var renderMoveSet = function (character, renderArea) {
+		var attack1 = $("<button class='fight' name='" + character.moveSet.attack + "'>");
+		$(renderArea).append(attack1);
 
 	};
 
@@ -100,48 +101,65 @@ $(document).ready(function () {
 			// Loop through the characters object and call the renderCharacter function on each character to render their card
 			for (var key in characters) {
 				renderCharacter(characters[key], "#team-character-select");
+				console.log(key);
 			}
 		}, )
 	};
 
 
-	initializeGame();
+	renderMoveSet(characters.Kain, ".moveset-container");
 
-	$(".character").click(function () {
-		$(this).toggleClass("off");
-	});
 
-	$(".character").click(function partyDisplay() {
-		// Loop through the characters object and call the renderCharacter function on each character to render their card
-		party.push(".character");
-		document.getElementById("selected-characters").innerHTML = party;
-		console.log(party);
-	});
-	console.log(party);
 
-/*
-
-	// function to load all characters into the select screen
-	var initializeGame = function () {
-		// loop through characters and call renderCharacter function
-		for (var key in characters) {
-			renderCharacter(characters[key], "#team-character-select");
-		}
-	};
-
-	// runs initializeGame function
-	initializeGame();
-
-	// function handles updating the selected characters
-	// function will also place the character based on the areaRender chosen (#player-section)
-
-	var updateCharacters = function (charObj, areaRender) {
-		// First we empty the area so that we can re-render new objects
-		$(areaRender).empty();
+	function updateCharacter(charObj, areaRender) {
+		// $(areaRender).empty();
+		console.log(charObj);
 		renderCharacter(charObj, areaRender);
 
 	};
-*/
+
+
+	$("#team-character-select").on("click", ".character", function () {
+		// Saving the clicked character's name.
+		dude = $(this).attr("data-name");
+		console.log(dude);
+		$(this).hide();
+		if (counter > 0) {
+			counter = counter - 1;
+			updateCharacter(characters[dude], "#selected-characters");
+			updateCharacter(characters[dude], "#player-section");
+		} else {
+			window.alert("stop picking peeps!");
+		}
+	});
+
+	renderCharacter(enemyCharacters.Kefka, "#enemy-section");
+
+	initializeGame();
+
+	/*
+
+		// function to load all characters into the select screen
+		var initializeGame = function () {
+			// loop through characters and call renderCharacter function
+			for (var key in characters) {
+				renderCharacter(characters[key], "#team-character-select");
+			}
+		};
+
+		// runs initializeGame function
+		initializeGame();
+
+		// function handles updating the selected characters
+		// function will also place the character based on the areaRender chosen (#player-section)
+
+		var updateCharacters = function (charObj, areaRender) {
+			// First we empty the area so that we can re-render new objects
+			$(areaRender).empty();
+			renderCharacter(charObj, areaRender);
+
+		};
+	*/
 	//=====================================================
 	// following commented out function will be replaced with enemy array seperate from player characters, keeping it here now for reference
 	/*
@@ -235,19 +253,12 @@ $("#team-character-select").on("click", ".character", function () {
 		console.log(response);
 	});
 
-
 	//-----Frame Transitions for content area-----------------------------------
 
 	// Homepage begins on start screen with following screens hidden.
 	// this section is designated for those hidden sections and creates initial 
 	// function for section progression.
 
-
-
-
-	$("#game-start-screen").click(function () {
-		$(this).toggleClass("off");
-	});
 	var startToggle;
 	$("#start-game").click(function () {
 		if (startToggle) {
@@ -260,9 +271,7 @@ $("#team-character-select").on("click", ".character", function () {
 	});
 
 	// Once characters are selected .click function proceeds to combat screen and detachs character select screen
-	$("#team-character-select").click(function () {
-		$(this).toggleClass("off");
-	});
+
 	var selectToggle;
 	$("#char-select").click(function () {
 		if (selectToggle) {
@@ -274,9 +283,7 @@ $("#team-character-select").on("click", ".character", function () {
 		}
 	});
 
-	$("#combat-arena").click(function () {
-		$(this).toggleClass("off");
-	});
+
 	var combatToggle;
 	$("#end-match").click(function () {
 		if (combatToggle) {
