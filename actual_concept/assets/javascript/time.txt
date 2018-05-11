@@ -1,0 +1,48 @@
+parseResponse({
+    "version": 2,
+    "locations": [{
+        "id": "187",
+        "geo": {
+            "name": "Oslo",
+            "country": {
+                "id": "no",
+                "name": "Norway"
+            },
+            "latitude": 59.913,
+            "longitude": 10.740
+        },
+        "time": {
+            "iso": "2018-05-11T01:27:05+02:00",
+            "datetime": {
+                "year": 2018,
+                "month": 5,
+                "day": 11,
+                "hour": 1,
+                "minute": 27,
+                "second": 5
+            },
+            "timezone": {
+                "offset": "+02:00",
+                "zoneabb": "CEST",
+                "zonename": "Central European Summer Time",
+                "zoneoffset": 3600,
+                "zonedst": 3600,
+                "zonetotaloffset": 7200
+            }
+        },
+        "astronomy": {
+            "objects": [{
+                "name": "sun",
+                "events": [{
+                    "type": "rise",
+                    "hour": 4,
+                    "minute": 49
+                }, {
+                    "type": "set",
+                    "hour": 21,
+                    "minute": 38
+                }]
+            }]
+        }
+    }]
+});

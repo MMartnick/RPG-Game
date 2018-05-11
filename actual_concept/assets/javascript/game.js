@@ -24,8 +24,8 @@ $(document).ready(function () {
 			}
 		},
 
-		"Cloud Strife": {
-			name: "Cloud Strife",
+		"Cloud": {
+			name: "Cloud",
 			health: 120,
 			attack: 8,
 			imageUrl: "assets/images/cloudSml.png",
@@ -61,15 +61,31 @@ $(document).ready(function () {
 
 	};
 
+// Variables for audio -------------------------------------
+var error = new Audio("assets/audio/error.mp3"); 
+var intro = new Audio("assets/audio/intro.mp3"); 
+var battle1 = new Audio("assets/audio/battle1.mp3"); 
+
+
 	// will be populated when player selects a character team
 	var dude;
-	var counter = 4;
-	var party = []; // 4
+	var charCounter = 2;
 	var unUsed = [];
 
 
+// Audio loops --------------------------------------------
 
-	//----------Functions	-------------------------------------------
+battle1.addEventListener('ended', function() {
+    this.currentTime = 0;
+    this.play();
+}, false);
+battle1.play();
+
+
+
+	//----------Functions-------------------------------------------
+
+// play intro music
 
 
 	// designates which frame is shown on load
@@ -77,7 +93,20 @@ $(document).ready(function () {
 	$("#team-character-select").hide();
 	$("#combat-arena").hide();
 
-	//id="team-character-select"
+
+
+	function rpgPlayed() {
+		var userInput, text;
+
+		userInput = document.getElementById("number").value;
+
+		if (isNaN(userInput) || userInput < 1 || userInput > 10) {
+			text = "Input not valid";
+		} else {
+			text = "Input OK";
+		}
+		document.getElementById("test").innerHTML = text;
+	};
 
 
 	var renderCharacter = function (character, renderArea) {
@@ -85,22 +114,32 @@ $(document).ready(function () {
 		var charDiv = $("<div class='character' data-name='" + character.name + "'>");
 		var charName = $("<div class='character-name'>").text(character.name);
 		var charImage = $("<img alt='image' class='character-image'>").attr("src", character.imageUrl);
-		var charHealth = $("<div class='character-health'>").text(character.health);
-		charDiv.append(charName).append(charImage).append(charHealth);
+		//var charHealth = $("<div class='character-health'>").text(character.health);
+		charDiv.append(charName).append(charImage); //.append(charHealth);
 		$(renderArea).append(charDiv);
 	};
 
 	var renderMoveSet = function (character, renderArea) {
-		var attack1 = $("<button class='fight' name='" + character.moveSet.attack + "'>");
+		var attack1 = $("<button class='combat-item' name='" + character.moveSet.attack + "'>");
 		$(renderArea).append(attack1);
 
 	};
+
+	var renderInfo = function (character, renderArea) {
+		var charInfoMenu = $("<div class='char-info-menu' data-name='" + character.name + "'>");
+		var charNameMenu = $("<div class='character-name-menu'>").text(character.name);
+		var charHealth = $("<div class='character-health'>").text(character.health);
+		charInfoMenu.append(charNameMenu).append(charHealth);
+		$(renderArea).append(charInfoMenu);
+	};
+
 
 	var initializeGame = function () {
 		$("#start-game").click(function () {
 			// Loop through the characters object and call the renderCharacter function on each character to render their card
 			for (var key in characters) {
 				renderCharacter(characters[key], "#team-character-select");
+				intro.play();
 				console.log(key);
 			}
 		}, )
@@ -108,6 +147,8 @@ $(document).ready(function () {
 
 
 	renderMoveSet(characters.Kain, ".moveset-container");
+	renderInfo(characters.Kain, ".character-menu");
+	renderInfo(enemyCharacters.Kefka, ".enemy-menu");
 
 
 
@@ -123,13 +164,14 @@ $(document).ready(function () {
 		// Saving the clicked character's name.
 		dude = $(this).attr("data-name");
 		console.log(dude);
-		$(this).hide();
-		if (counter > 0) {
-			counter = counter - 1;
+		
+		if (charCounter > 0) {
+			charCounter = charCounter - 1;
 			updateCharacter(characters[dude], "#selected-characters");
 			updateCharacter(characters[dude], "#player-section");
+			$(this).hide();
 		} else {
-			window.alert("stop picking peeps!");
+			error.play();
 		}
 	});
 
@@ -242,16 +284,92 @@ $("#team-character-select").on("click", ".character", function () {
 	//-------API----------------------------------------------------------------
 
 	// World Clock API will be used to create a day/night cycle. May change over to one that can adapt local time if that's possible. 
-	// Will see what can be done in conjunction with googlemaps
-	var timeURL = "http://worldclockapi.com/api/json/utc/now";
 
+	/*
+	var timeURL = "https://api.xmltime.com/timeservice?accesskey=QE7YOGF599&expires=2018-05-11T01%3A20%3A56%2B00%3A00&signature=ElCrbFtDVglcspfs5duzi5wC994%3D&version=2&callback=parseResponse&placeid=norway%2Foslo&geo=1&lang=en&time=1&sun=1&timechanges=0&tz=1";
 	$.ajax({
 		url: timeURL,
 		method: "GET"
-	}).then(function (response) {
-		$("#currentDateTime").text(JSON.stringify(response));
-		console.log(response);
+	}).then(function (parseResponse) {
+		console.log(parseResponse);
+
+		$("#currentDateTime").innerHTML(parseResponse.locations.time.datetime.hour + " : " + parseResponse.locations.time.datetime.minute);
 	});
+
+//	if (response.currentDateTime < )
+
+
+
+	$("#team-character-select").on("click", ".character", function () {
+		// Saving the clicked character's name.
+		dude = $(this).attr("data-name");
+		console.log(dude);
+		$(this).hide();
+		if (charCounter > 0) {
+			charCounter = charCounter - 1;
+			updateCharacter(characters[dude], "#selected-characters");
+			updateCharacter(characters[dude], "#player-section");
+		} else {
+			window.alert("stop picking peeps!");
+		}
+	});
+*/
+
+	var geoLocateURL = "https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDQT5FwzIpavsVxJT1raPylGW7Vwy_3o5k";
+	var latLon = document.getElementById("currentDateTime");
+	// Here we run our AJAX call geolocate API
+	$.ajax({
+			url: geoLocateURL,
+			method: "GET"
+		})
+		.then(function getLocation() {
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(showPosition);
+			} else {
+				latLon.innerHTML = "Geolocation is not supported by this browser.";
+			};
+
+			function showPosition(position) {
+				latLon.innerHTML = "Latitude: " + position.coords.latitude +
+					"<br>Longitude: " + position.coords.longitude;
+			}
+			console.log(geolocation)
+		});
+
+	//-----location API
+
+	var APIKey = "166a433c57516f51dfab1f7edaed8413";
+
+	// Here we are building the URL we need to query the database
+	var queryURL = "https://api.openweathermap.org/data/2.5/weather?" +
+		"lat=45&lon=101&appid=" + APIKey;
+
+	// Here we run our AJAX call to the OpenWeatherMap API
+	$.ajax({
+			url: queryURL,
+			method: "GET"
+		})
+		// We store all of the retrieved data inside of an object called "response"
+		.then(function (response) {
+
+			// Log the queryURL
+			console.log(queryURL);
+
+			// Log the resulting object
+			console.log(response);
+
+			// Transfer content to HTML
+			$(".city").html("<h1>" + response.name + " Weather Details</h1>");
+			$(".wind").text("Wind Speed: " + response.wind.speed);
+			$(".humidity").text("Humidity: " + response.main.humidity);
+			$(".temp").text("Temperature (F) " + response.main.temp);
+
+			// Log the data in the console as well
+			console.log(response.name);
+			console.log("Wind Speed: " + response.wind.speed);
+			console.log("Humidity: " + response.main.humidity);
+			console.log("Temperature (F): " + response.main.temp);
+		});
 
 	//-----Frame Transitions for content area-----------------------------------
 
@@ -280,6 +398,9 @@ $("#team-character-select").on("click", ".character", function () {
 		} else {
 			selectToggle = $("#team-character-select").detach();
 			$("#combat-arena").show("slow");
+			intro.pause();
+			battle1.play();
+
 		}
 	});
 

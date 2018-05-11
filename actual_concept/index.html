@@ -3,8 +3,8 @@
 
 <head>
 	<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="
-		crossorigin="anonymous"></script>
-	
+	    crossorigin="anonymous"></script>
+	<link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
 
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
 
@@ -13,8 +13,8 @@
 <body>
 
 	<nav>
-		<!--id="currentDateTime"-Only needed for testing to ensure the data appears, will be removed once data is parse and the function is working properly-->
 		NavBar
+		<article id="demo"></article>
 	</nav>
 	<div class="container">
 
@@ -25,34 +25,41 @@
 			<!--To align everything properly each section will need to be detatched/returned using JS not hidden-->
 			<article class="logo"></article>
 			<article class="start-menu">
-				<p class="menu-item">
-					<button id="start-game">Start Game</button>
-				</p>
+				<p>How many RPG's have you played?</p>
+				<input id="number">
+				<br>
+				<button type="button" onclick="rpgPlayed()">Submit</button>
+				<br>
+				<button id="start-game">Start Game</button>
+				<br>
+				<button onclick="getLocation()">Try It</button>
+<p id="test"></p>
+
+
 			</article>
 
 		</section>
 
 		<section id="team-character-select">
-			<p class="select-button-contain"><button id="char-select">Char Select</button></p>
+			<p class="select-button-contain">
+				<button id="char-select">Char Select</button>
+			</p>
 			<article id="selected-characters"></article>
-			
+
 		</section>
 
 		<section id="combat-arena">
-			<article id="player-section">
-				<div class="player-characters" id="attacker-one"></div>
-				<div class="player-characters" id="attacker-two"></div>
-				<div class="player-characters" id="attacker-three"></div>
-				<div class="player-characters" id="attacker-four"></div>
-			</article>
+			<article id="player-section"></article>
 
 			<article id="enemy-section">
 			</article>
 			<article id="combat-menu">
 				<div class="moveset-container"></div>
+				<div class="character-menu"></div>
+				<div class="enemy-menu"></div>
 				<!--<button id="end-match">End Match</button>  Will be replaced, keeping for possible test use-->
 			</article>
-
+		</div>
 
 		</section>
 
