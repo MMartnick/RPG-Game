@@ -1,5 +1,38 @@
 // Executes when the DOM is fully loaded
+// sets difficulty
+function difficulty() {
+	var userInput, text;
+	userInput = document.getElementById("number").value;
+	if (isNaN(userInput) || userInput < 1 || userInput > 10) {
+		text = "Input not valid";
+	} else {
+		text = "Input OK";
+	}
+	document.getElementById("test").innerHTML = text;
+};
+
+
+
+var x = document.getElementById("demo");
+
+function getLocation() {
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(showPosition);
+	} else {
+		x.innerHTML = "Geolocation is not supported by this browser.";
+	}
+}
+
+function showPosition(position) {
+	x.innerHTML = "Latitude: " + position.coords.latitude +
+		"<br>Longitude: " + position.coords.longitude;
+}
+
+
+
 $(document).ready(function () {
+
+
 
 
 	var characters = {
@@ -9,7 +42,7 @@ $(document).ready(function () {
 		// the same set up with variations 
 		"Kain": {
 			name: "Kain",
-			health: 120,
+			health: 9999,
 			strength: 8,
 			imageUrl: "assets/images/kainSml.png",
 			enemyAttackBack: 15,
@@ -29,7 +62,16 @@ $(document).ready(function () {
 			health: 120,
 			attack: 8,
 			imageUrl: "assets/images/cloudSml.png",
-			enemyAttackBack: 15
+			enemyAttackBack: 15,
+			moveSet: {
+				attack: 18,
+				jump: 16,
+				skill: {
+					lancet: 20,
+					tornado: 27
+				},
+				defend: 0,
+			}
 		},
 
 		"Gilgamesh": {
@@ -37,7 +79,16 @@ $(document).ready(function () {
 			health: 120,
 			attack: 8,
 			imageUrl: "assets/images/gilgSml.png",
-			enemyAttackBack: 15
+			enemyAttackBack: 15,
+			moveSet: {
+				attack: 18,
+				jump: 16,
+				skill: {
+					lancet: 20,
+					tornado: 27
+				},
+				defend: 0,
+			}
 		},
 
 		"Golbez": {
@@ -45,7 +96,16 @@ $(document).ready(function () {
 			health: 120,
 			attack: 8,
 			imageUrl: "assets/images/golbezSml.png",
-			enemyAttackBack: 15
+			enemyAttackBack: 15,
+			moveSet: {
+				attack: 18,
+				jump: 16,
+				skill: {
+					lancet: 20,
+					tornado: 27
+				},
+				defend: 0,
+			}
 		},
 	};
 
@@ -58,34 +118,60 @@ $(document).ready(function () {
 			enemyAttackBack: 15
 		},
 
+	};
+
+	var spiderHouse = {
+		"Ultimecia": {
+			name: "Ultimecia",
+			health: 120,
+			attack: 8,
+			imageUrl: "assets/images/ultimecia.png",
+			enemyAttackBack: 15
+		},
 
 	};
 
-// Variables for audio -------------------------------------
-var error = new Audio("assets/audio/error.mp3"); 
-var intro = new Audio("assets/audio/intro.mp3"); 
-var battle1 = new Audio("assets/audio/battle1.mp3"); 
+	// Variables for audio -------------------------------------
+	var error = new Audio("assets/audio/error.mp3");
+	var intro = new Audio("assets/audio/intro.mp3");
+	var growl = new Audio("assets/audio/growl.mp3");
+	var cursor = new Audio("assets/audio/cursor.mp3");
+	var battle1 = new Audio("assets/audio/battle1.mp3");
 
 
 	// will be populated when player selects a character team
+
 	var dude;
+	var badDude;
 	var charCounter = 2;
-	var unUsed = [];
+	var killCount = 0;
+	var latitude;
+	var longitude;
+	var localEnemy;
 
 
-// Audio loops --------------------------------------------
+	//var combatTimer = setInterval(timer, speed);
+	//var currentChar = charObj;
+	//console.log(charObj);
 
-battle1.addEventListener('ended', function() {
-    this.currentTime = 0;
-    this.play();
-}, false);
-battle1.play();
 
+	// Audio loops --------------------------------------------
+
+	battle1.addEventListener('ended', function () {
+		this.currentTime = 0;
+		this.play();
+	}, false);
+	battle1.play();
+
+	intro.addEventListener('ended', function () {
+		this.currentTime = 0;
+		this.play();
+	}, false);
+	intro.play();
 
 
 	//----------Functions-------------------------------------------
 
-// play intro music
 
 
 	// designates which frame is shown on load
@@ -95,20 +181,9 @@ battle1.play();
 
 
 
-	function rpgPlayed() {
-		var userInput, text;
-
-		userInput = document.getElementById("number").value;
-
-		if (isNaN(userInput) || userInput < 1 || userInput > 10) {
-			text = "Input not valid";
-		} else {
-			text = "Input OK";
-		}
-		document.getElementById("test").innerHTML = text;
-	};
 
 
+	// renders all characters to the DOM
 	var renderCharacter = function (character, renderArea) {
 		// this block of code builds the character card, and renders it to the page.
 		var charDiv = $("<div class='character' data-name='" + character.name + "'>");
@@ -119,12 +194,40 @@ battle1.play();
 		$(renderArea).append(charDiv);
 	};
 
+	// renders all characters to the DOM
+	var renderEnemy = function (character, renderArea) {
+		// this block of code builds the character card, and renders it to the page.
+		var charDiv = $("<div class='character' data-name='" + character.name + "'>");
+		// var charName = $("<div class='character-name'>").text(character.name);
+		var charImage = $("<img alt='image' class='character-image'>").attr("src", character.imageUrl);
+		// var charHealth = $("<div class='character-health'>").text(character.health);
+		charDiv /*.append(charName)*/ .append(charImage); //.append(charHealth);
+		$(renderArea).append(charDiv);
+
+
+
+	};
+
+
+
+	var getEnemy = function (latitude, longitude) {
+		if ((latitude = 30.295502) && (longitude = -97.7417479)) {
+			$(localEnemy = spiderHouse);
+		}
+
+	}
+
+	// renders character moveSet to the DOM
 	var renderMoveSet = function (character, renderArea) {
-		var attack1 = $("<button class='combat-item' name='" + character.moveSet.attack + "'>");
+		var attack1 = $("<button class='combat-attack' name='" + character.moveSet.attack + "'>");
+		attack1.text("Attack!");
 		$(renderArea).append(attack1);
 
 	};
 
+
+
+	// renders character info to the DOM
 	var renderInfo = function (character, renderArea) {
 		var charInfoMenu = $("<div class='char-info-menu' data-name='" + character.name + "'>");
 		var charNameMenu = $("<div class='character-name-menu'>").text(character.name);
@@ -134,24 +237,7 @@ battle1.play();
 	};
 
 
-	var initializeGame = function () {
-		$("#start-game").click(function () {
-			// Loop through the characters object and call the renderCharacter function on each character to render their card
-			for (var key in characters) {
-				renderCharacter(characters[key], "#team-character-select");
-				intro.play();
-				console.log(key);
-			}
-		}, )
-	};
-
-
-	renderMoveSet(characters.Kain, ".moveset-container");
-	renderInfo(characters.Kain, ".character-menu");
-	renderInfo(enemyCharacters.Kefka, ".enemy-menu");
-
-
-
+	// updates selected character
 	function updateCharacter(charObj, areaRender) {
 		// $(areaRender).empty();
 		console.log(charObj);
@@ -160,193 +246,204 @@ battle1.play();
 	};
 
 
+
+	// initiallizes the game
+	var initializeGame = function () {
+		$("#start-game").click(function () {
+			// Loop through the characters object and call the renderCharacter function on each character to render their card
+			for (var key in characters) {
+
+				//renderInfo(characters[key], ".character-menu");
+				renderCharacter(characters[key], "#team-character-select");
+				intro.play();
+				console.log(key);
+			};
+
+
+			//var result = Object.keys(enemyCharacters).map(function (key) {
+			//	return [Number(key), enemyCharacters[key]];
+			for (var key in enemyCharacters) {
+				renderEnemy(enemyCharacters[key], "#enemy-section");
+				renderInfo(enemyCharacters[key], ".enemy-menu");
+				
+			};
+
+
+				intro.play();
+				console.log(key);
+	
+		}, )
+	};
+
+
+
+	// function for selecting characters
 	$("#team-character-select").on("click", ".character", function () {
 		// Saving the clicked character's name.
 		dude = $(this).attr("data-name");
 		console.log(dude);
-		
+
 		if (charCounter > 0) {
 			charCounter = charCounter - 1;
 			updateCharacter(characters[dude], "#selected-characters");
 			updateCharacter(characters[dude], "#player-section");
+			renderInfo(characters[dude], ".character-menu");
+			renderMoveSet(characters[dude], ".moveset-container");
 			$(this).hide();
+			cursor.play();
 		} else {
 			error.play();
 		}
 	});
 
-	renderCharacter(enemyCharacters.Kefka, "#enemy-section");
-
-	initializeGame();
-
-	/*
-
-		// function to load all characters into the select screen
-		var initializeGame = function () {
-			// loop through characters and call renderCharacter function
-			for (var key in characters) {
-				renderCharacter(characters[key], "#team-character-select");
-			}
-		};
-
-		// runs initializeGame function
-		initializeGame();
-
-		// function handles updating the selected characters
-		// function will also place the character based on the areaRender chosen (#player-section)
-
-		var updateCharacters = function (charObj, areaRender) {
-			// First we empty the area so that we can re-render new objects
-			$(areaRender).empty();
-			renderCharacter(charObj, areaRender);
-
-		};
-	*/
-	//=====================================================
-	// following commented out function will be replaced with enemy array seperate from player characters, keeping it here now for reference
-	/*
-	// this function will render the available-to-attack enemies. This should be run once after a character has been selected 
-	var renderCharacter = function (enemyArr) {
-		for (var i = 0; i < enemyArr.length; i++) {
-			renderCharacter(enemyArr[i], "#available-to-attack-section");
-		}
-	};
-	//=====================================================
-
-
-	//function handles rendering game messages
+	//function to handle rendering game messages.
 	var renderMessage = function (message) {
-		// builds the message and appends it to the page
+		// builds the message and appends it to the page 
 		var gameMessageSet = $("#game-message");
 		var newMessage = $("<div>").text(message);
 		gameMessageSet.append(newMessage);
 	};
 
-	// function which handles restarting the game after victory or defeat
-	var restartGame = function (resultMessage) {
-		// when restart button is clicked, reload
-	var restart = $("<button>Main Menu</button>").click(function () {
-		location.reload();
-	});
+	// function to clear the game message action
+	var clearMessage = function () {
+		var gameMessage = $("#game-message");
 
-	// Build div that will display victory/defeat message
-	var gameState = $("<div>").text(resultMessage);
-
-	// render the restart button and victory/defeat message to the page
-	$("body").append(gameState);
-	$("body").append(restart);
-};
-
-// function to clear the game message action
-var clearMessage = function () {
-	var gameMessage = $("#game-message");
-	gameMessage.text("");
-};
-
-//--------Character selection-----------------------------------------------
-
-// on click event for selecting our character 
-$("#team-character-select").on("click", ".character", function () {
-	//saving the clicked characters name
-	var name = $(this).attr("data-name");
-
-	//if a player character has not yet been chosen 
-	if (!attacker) {
-		// we populate attacker with the selected character and push to the selected characters and party array
-		attackerChoice = characters[name];
+		gameMessage.text("");
 	};
 
-/*	if (!attacker2) {
-		attacker2 = characters[name];	
-	}
-*/
 
-	/*
-		// we then loop through the remaining characters and push them to the unUsed array
-		for (var key in characters) {
-			if (key !==name) {
-				unUsed.push(characters[key]);
+
+	// functions called
+
+	
+
+
+	initializeGame();
+
+
+	//combat set up. 
+
+	// when you click the attack button, run the following game logic
+	$(".combat-attack").on("click", function () {
+		// if there is a defender, combat will occur
+		//if ($("#defender").children().length !== 0) {
+		// creates messages for our attack and our opponents counter attack
+		var attackMessage = " You attacked " + enemyCharacters.Kefka.name + "for" + characters[dude].moveSet.attack + " damage.";
+		var counterAttackMessage = enemyCharacters.Kefka.name + " did " + enemyCharacters.Kefka.attack + " damage.";
+		clearMessage();
+		console.log(enemyCharacters.Kefka.health);
+		// Reduce defender's health by your attack value.
+
+
+
+		// If the enemey st has health
+		if (enemyCharacters.Kefka.health > 0) {
+			// Render the enemy's updated character card.
+			// updateCharacter(defender, "#defender");
+			enemyCharacters.Kefka.health -= characters[dude].moveSet.attack;
+
+			// Render the combat messages.
+			renderMessage(attackMessage);
+			renderMessage(counterAttackMessage);
+
+			// Reduce your attack health by the opponents attack value.
+			characters[dude].health -= enemyCharacters.Kefka.attack;
+			console.log(characters[dude].health);
+			//render the player's updated character card.
+			//updateCharacter(attacker, "#selected-character");
+
+
+			if (killCount < enemyCharacters.length && enemyCharacters.Kefka.health <= 0) {
+				$(enemyCharacters.Kefka).detach();
+				$(enemyCharacters.Kafka).show("slow");
+				battle1.pause();
+				boss1.play();
+			}
+
+
+			// If you have less than zero health the game ends. 
+			// We call the restartGame function to allow the user to restart the game and play again.
+			if (characters[dude].health <= 0) {
+				clearMessage();
+				// restartGame("Game Over");
+				window.alert("You ded")
+				$(".combat-attack").off("click");
+			}
+		} else {
+			// if the enemy has less than zero health they are defeated
+			// remove your opponents character card. 
+			// $("#defender").empty();
+
+			var gameStateMessage = "You have defeated " + enemyCharacters.Kefka.name;
+			renderMessage(gameStateMessage);
+
+			// Increment your kill count
+			killCount++;
+
+			// If you have killed all of your opponents you win
+			// Call the restartGame function to allow the user to restart the game and play again
+			if (killCount >= enemyCharacters.length) {
+				clearMessage();
+				$(".combat-attack").off("click");
+				//restartGame("You Won");
+				window.alert("You won!!!!");
+
 			}
 		}
+		// Increment turn counter. This is used for determining how much damage the player does.
+		// turnCounter++;
+		//} else {
+		// If there is no defender, render an error message
+		//clearMessage();
+		//renderMessage("No enemy here");
 
-
-
-		// then render our selected characters to #player-section
-		updateCharacter(attacker1, "#attacker-one");
-		updateCharacter(attacker2, "#attacker-two");
-
-		 
+		//}
 	});
 
-	// here I need to create and populate the moveset
-	*/
 
 	//-------API----------------------------------------------------------------
 
 	// World Clock API will be used to create a day/night cycle. May change over to one that can adapt local time if that's possible. 
 
-	/*
-	var timeURL = "https://api.xmltime.com/timeservice?accesskey=QE7YOGF599&expires=2018-05-11T01%3A20%3A56%2B00%3A00&signature=ElCrbFtDVglcspfs5duzi5wC994%3D&version=2&callback=parseResponse&placeid=norway%2Foslo&geo=1&lang=en&time=1&sun=1&timechanges=0&tz=1";
+
+	var timeURL = "https://maps.googleapis.com/maps/api/timezone/json?location=" + latitude + "," + longitude + "&timestamp=1458000000&key=AIzaSyBrACSj3zHNkqz4JO7ypicGFCE-We1aco8";
 	$.ajax({
 		url: timeURL,
 		method: "GET"
-	}).then(function (parseResponse) {
-		console.log(parseResponse);
+	}).then(function (response) {
+		console.log(response);
 
-		$("#currentDateTime").innerHTML(parseResponse.locations.time.datetime.hour + " : " + parseResponse.locations.time.datetime.minute);
+		$("#currentDateTime").innerHTML(response);
 	});
 
-//	if (response.currentDateTime < )
 
+	var locationURL = "https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyBrACSj3zHNkqz4JO7ypicGFCE-We1aco8";
 
-
-	$("#team-character-select").on("click", ".character", function () {
-		// Saving the clicked character's name.
-		dude = $(this).attr("data-name");
-		console.log(dude);
-		$(this).hide();
-		if (charCounter > 0) {
-			charCounter = charCounter - 1;
-			updateCharacter(characters[dude], "#selected-characters");
-			updateCharacter(characters[dude], "#player-section");
-		} else {
-			window.alert("stop picking peeps!");
-		}
-	});
-*/
-
-	var geoLocateURL = "https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDQT5FwzIpavsVxJT1raPylGW7Vwy_3o5k";
-	var latLon = document.getElementById("currentDateTime");
-	// Here we run our AJAX call geolocate API
 	$.ajax({
-			url: geoLocateURL,
-			method: "GET"
-		})
-		.then(function getLocation() {
-			if (navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(showPosition);
-			} else {
-				latLon.innerHTML = "Geolocation is not supported by this browser.";
-			};
+		url: locationURL,
+		method: "GET"
+	}).then(function (geolocate) {
+		console.log(response);
 
-			function showPosition(position) {
-				latLon.innerHTML = "Latitude: " + position.coords.latitude +
-					"<br>Longitude: " + position.coords.longitude;
-			}
-			console.log(geolocation)
-		});
+		//var longitude = response.location.lng;
+		//var latitude = response.location.lat;
+		$("#currentDateTime").innerHTML(response);
+
+	});
+
+
 
 	//-----location API
 
 	var APIKey = "166a433c57516f51dfab1f7edaed8413";
 
 	// Here we are building the URL we need to query the database
-	var queryURL = "https://api.openweathermap.org/data/2.5/weather?" +
-		"lat=45&lon=101&appid=" + APIKey;
+	var weatherURL = "https://api.openweathermap.org/data/2.5/weather?" +
+		"lat=" + latitude + "&" + longitude + "=101&appid=" + APIKey;
 
 	// Here we run our AJAX call to the OpenWeatherMap API
 	$.ajax({
-			url: queryURL,
+			url: weatherURL,
 			method: "GET"
 		})
 		// We store all of the retrieved data inside of an object called "response"
@@ -355,7 +452,7 @@ $("#team-character-select").on("click", ".character", function () {
 			// Log the queryURL
 			console.log(queryURL);
 
-			// Log the resulting object
+			// Log the resulting object	
 			console.log(response);
 
 			// Transfer content to HTML
@@ -370,6 +467,7 @@ $("#team-character-select").on("click", ".character", function () {
 			console.log("Humidity: " + response.main.humidity);
 			console.log("Temperature (F): " + response.main.temp);
 		});
+
 
 	//-----Frame Transitions for content area-----------------------------------
 
@@ -399,6 +497,7 @@ $("#team-character-select").on("click", ".character", function () {
 			selectToggle = $("#team-character-select").detach();
 			$("#combat-arena").show("slow");
 			intro.pause();
+			growl.play();
 			battle1.play();
 
 		}

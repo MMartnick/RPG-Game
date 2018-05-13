@@ -15,25 +15,34 @@
 	<nav>
 		NavBar
 		<article id="demo"></article>
+		<article id="currentDateTime"></article>
 	</nav>
 	<div class="container">
 
-		<div id="game-message"></div>
+
 
 
 		<section id="game-start-screen">
 			<!--To align everything properly each section will need to be detatched/returned using JS not hidden-->
 			<article class="logo"></article>
 			<article class="start-menu">
-				<p>How many RPG's have you played?</p>
+
+				<br>
+				<button id="start-game" class="main-menu">Start Game</button>
+				<br>
+				<button onclick="getLocation()" class="main-menu">Set Location</button>
+				<br>
+				<button type="button" onclick="difficulty()" class="main-menu">Submit
+					<br> Difficulty</button>
+				<br>
+				<p>Select your difficulty
+					<br> 1 - 10</p>
 				<input id="number">
 				<br>
-				<button type="button" onclick="rpgPlayed()">Submit</button>
-				<br>
-				<button id="start-game">Start Game</button>
-				<br>
-				<button onclick="getLocation()">Try It</button>
-<p id="test"></p>
+
+
+				<p id="test"></p>
+
 
 
 			</article>
@@ -49,24 +58,33 @@
 		</section>
 
 		<section id="combat-arena">
+			<article id="game-message"></article>
 			<article id="player-section"></article>
 
 			<article id="enemy-section">
 			</article>
 			<article id="combat-menu">
 				<div class="moveset-container"></div>
-				<div class="character-menu"></div>
-				<div class="enemy-menu"></div>
-				<!--<button id="end-match">End Match</button>  Will be replaced, keeping for possible test use-->
+				<div class="character-menu">
+					<div class="health-bar1" data-total="" data-value="">
+						<div class="bar1">
+							<div class="hit1"></div>
+						</div>
+					</div>
+				</div>
+				<div class="enemy-menu">
+					<div class="health-bar2" data-total="" data-value="">
+						<div class="bar2"></div>
+						<!--<button id="end-match">End Match</button>  Will be replaced, keeping for possible test use-->
 			</article>
-		</div>
+			</div>
 
 		</section>
 
-	</div>
+		</div>
 
 
-	<script src="assets/javascript/game.js"></script>
+		<script src="assets/javascript/game.js"></script>
 </body>
 
 </html>
