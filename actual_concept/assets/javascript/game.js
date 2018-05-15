@@ -13,11 +13,15 @@ function difficulty() {
 
 
 
+
 var x = document.getElementById("demo");
 
 function getLocation() {
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(showPosition);
+		lat = Position.coords.latitude;
+		lon = Position.coords.longitude;
+
 	} else {
 		x.innerHTML = "Geolocation is not supported by this browser.";
 	}
@@ -28,8 +32,44 @@ function showPosition(position) {
 		"<br>Longitude: " + position.coords.longitude;
 }
 
+//-----weather API
+
+var APIKey = "166a433c57516f51dfab1f7edaed8413";
+
+// Here we are building the URL we need to query the database
+var weatherURL = "https://api.openweathermap.org/data/2.5/weather?" +
+	"lat=" + latitude + "&" + longitude + "=101&appid=" + APIKey;
+
+// Here we run our AJAX call to the OpenWeatherMap API
+$.ajax({
+		url: weatherURL,
+		method: "GET"
+	})
+	// We store all of the retrieved data inside of an object called "response"
+	.then(function (response) {
+
+		// Log the queryURL
+		console.log(queryURL);
+
+		// Log the resulting object	
+		console.log(response);
+
+		// Transfer content to HTML
+		$(".city").html("<h1>" + response.name + " Weather Details</h1>");
+		$(".wind").text("Wind Speed: " + response.wind.speed);
+		$(".humidity").text("Humidity: " + response.main.humidity);
+		$(".temp").text("Temperature (F) " + response.main.temp);
+
+		// Log the data in the console as well
+		console.log(response.name);
+		console.log("Wind Speed: " + response.wind.speed);
+		console.log("Humidity: " + response.main.humidity);
+		console.log("Temperature (F): " + response.main.temp);
+	});
 
 
+
+	
 $(document).ready(function () {
 
 
@@ -47,7 +87,7 @@ $(document).ready(function () {
 			imageUrl: "assets/images/kainSml.png",
 			enemyAttackBack: 15,
 			moveSet: {
-				attack: 8,
+				attack: 40,
 				jump: 16,
 				skill: {
 					lancet: 20,
@@ -64,7 +104,7 @@ $(document).ready(function () {
 			imageUrl: "assets/images/cloudSml.png",
 			enemyAttackBack: 15,
 			moveSet: {
-				attack: 18,
+				attack: 5,
 				jump: 16,
 				skill: {
 					lancet: 20,
@@ -118,6 +158,14 @@ $(document).ready(function () {
 			enemyAttackBack: 15
 		},
 
+		"Ultimecia": {
+			name: "Ultimecia",
+			health: 120,
+			attack: 8,
+			imageUrl: "assets/images/ultimecia.png",
+			enemyAttackBack: 15
+		},
+
 	};
 
 	var spiderHouse = {
@@ -145,8 +193,7 @@ $(document).ready(function () {
 	var badDude;
 	var charCounter = 2;
 	var killCount = 0;
-	var latitude;
-	var longitude;
+
 	var localEnemy;
 
 
@@ -219,119 +266,27 @@ $(document).ready(function () {
 
 	// renders character moveSet to the DOM
 	var renderMoveSet = function (character, renderArea) {
-		var attack1 = $("<button class='combat-attack' name='" + character.moveSet.attack + "'>");
-		attack1.text("Attack!");
+		var attack1 = $("<button>");
+		//class='combat-attack'  data-type='"+character+"'>");
+		attack1.addClass("combat-attack");
+		attack1.attr("data-type", character);
+		attack1.text(character);
+		var something = attack1.attr("data-type");
+		console.log(something);
 		$(renderArea).append(attack1);
-
-	};
-
-
-
-	// renders character info to the DOM
-	var renderInfo = function (character, renderArea) {
-		var charInfoMenu = $("<div class='char-info-menu' data-name='" + character.name + "'>");
-		var charNameMenu = $("<div class='character-name-menu'>").text(character.name);
-		var charHealth = $("<div class='character-health'>").text(character.health);
-		charInfoMenu.append(charNameMenu).append(charHealth);
-		$(renderArea).append(charInfoMenu);
-	};
-
-
-	// updates selected character
-	function updateCharacter(charObj, areaRender) {
-		// $(areaRender).empty();
-		console.log(charObj);
-		renderCharacter(charObj, areaRender);
-
-	};
-
-
-
-	// initiallizes the game
-	var initializeGame = function () {
-		$("#start-game").click(function () {
-			// Loop through the characters object and call the renderCharacter function on each character to render their card
-			for (var key in characters) {
-
-				//renderInfo(characters[key], ".character-menu");
-				renderCharacter(characters[key], "#team-character-select");
-				intro.play();
-				console.log(key);
-			};
-
-
-			//var result = Object.keys(enemyCharacters).map(function (key) {
-			//	return [Number(key), enemyCharacters[key]];
-			for (var key in enemyCharacters) {
-				renderEnemy(enemyCharacters[key], "#enemy-section");
-				renderInfo(enemyCharacters[key], ".enemy-menu");
-				
-			};
-
-
-				intro.play();
-				console.log(key);
-	
-		}, )
-	};
-
-
-
-	// function for selecting characters
-	$("#team-character-select").on("click", ".character", function () {
-		// Saving the clicked character's name.
-		dude = $(this).attr("data-name");
-		console.log(dude);
-
-		if (charCounter > 0) {
-			charCounter = charCounter - 1;
-			updateCharacter(characters[dude], "#selected-characters");
-			updateCharacter(characters[dude], "#player-section");
-			renderInfo(characters[dude], ".character-menu");
-			renderMoveSet(characters[dude], ".moveset-container");
-			$(this).hide();
-			cursor.play();
-		} else {
-			error.play();
-		}
-	});
-
-	//function to handle rendering game messages.
-	var renderMessage = function (message) {
-		// builds the message and appends it to the page 
-		var gameMessageSet = $("#game-message");
-		var newMessage = $("<div>").text(message);
-		gameMessageSet.append(newMessage);
-	};
-
-	// function to clear the game message action
-	var clearMessage = function () {
-		var gameMessage = $("#game-message");
-
-		gameMessage.text("");
-	};
-
-
-
-	// functions called
-
-	
-
-
-	initializeGame();
-
-
-	//combat set up. 
+			//combat set up. 
 
 	// when you click the attack button, run the following game logic
 	$(".combat-attack").on("click", function () {
 		// if there is a defender, combat will occur
 		//if ($("#defender").children().length !== 0) {
 		// creates messages for our attack and our opponents counter attack
-		var attackMessage = " You attacked " + enemyCharacters.Kefka.name + "for" + characters[dude].moveSet.attack + " damage.";
+		var whateverANJALIwants = $(this).attr("data-type"); 
+		console.log(whateverANJALIwants, "Yo");
+		var attackMessage = characters[whateverANJALIwants].name + enemyCharacters.Kefka.name + "for" + characters[whateverANJALIwants].moveSet.attack + " damage.";
 		var counterAttackMessage = enemyCharacters.Kefka.name + " did " + enemyCharacters.Kefka.attack + " damage.";
 		clearMessage();
-		console.log(enemyCharacters.Kefka.health);
+		
 		// Reduce defender's health by your attack value.
 
 
@@ -340,15 +295,18 @@ $(document).ready(function () {
 		if (enemyCharacters.Kefka.health > 0) {
 			// Render the enemy's updated character card.
 			// updateCharacter(defender, "#defender");
-			enemyCharacters.Kefka.health -= characters[dude].moveSet.attack;
+			enemyCharacters.Kefka.health -= characters[whateverANJALIwants].moveSet.attack;
 
+			console.log("kefka");
+			console.log(enemyCharacters.Kefka.health);
 			// Render the combat messages.
 			renderMessage(attackMessage);
 			renderMessage(counterAttackMessage);
 
 			// Reduce your attack health by the opponents attack value.
-			characters[dude].health -= enemyCharacters.Kefka.attack;
-			console.log(characters[dude].health);
+			characters[whateverANJALIwants].health -= enemyCharacters.Kefka.attack;
+			console.log(characters[whateverANJALIwants]);
+			console.log(characters[whateverANJALIwants].health);
 			//render the player's updated character card.
 			//updateCharacter(attacker, "#selected-character");
 
@@ -363,7 +321,7 @@ $(document).ready(function () {
 
 			// If you have less than zero health the game ends. 
 			// We call the restartGame function to allow the user to restart the game and play again.
-			if (characters[dude].health <= 0) {
+			if (characters[whateverANJALIwants].health <= 0) {
 				clearMessage();
 				// restartGame("Game Over");
 				window.alert("You ded")
@@ -401,6 +359,108 @@ $(document).ready(function () {
 	});
 
 
+	};
+
+
+
+	// renders character info to the DOM
+	var renderInfo = function (character, renderArea) {
+		var charInfoMenu = $("<div class='char-info-menu' data-name='" + character.name + "'>");
+		var charNameMenu = $("<div class='character-name-menu'>").text(character.name);
+		var charHealth = $("<div class='character-health'>").text(character.health);
+		charInfoMenu.append(charNameMenu).append(charHealth);
+		$(renderArea).append(charInfoMenu);
+	};
+
+
+	// updates selected character
+	function updateCharacter(charObj, areaRender) {
+		// $(areaRender).empty();
+		console.log(charObj);
+		renderCharacter(charObj, areaRender);
+
+	};
+
+
+
+	// initiallizes the game
+	var initializeGame = function () {
+		$("#start-game").click(function () {
+			// Loop through the characters object and call the renderCharacter function on each character to render their card
+			for (var key in characters) {
+
+				//renderInfo(characters[key], ".character-menu");
+				renderCharacter(characters[key], "#team-character-select");
+				//intro.play();
+				console.log(key);
+			};
+
+
+			//var result = Object.keys(enemyCharacters).map(function (key) {
+			//return [Number(key), enemyCharacters[key]];
+			for (var key in enemyCharacters) {
+				renderEnemy(enemyCharacters[key], "#enemy-section");
+				renderInfo(enemyCharacters[key], ".enemy-menu");
+				
+			};
+
+
+				
+				console.log(key);
+	
+		}, )
+	};
+
+
+
+	// function for selecting characters
+	$("#team-character-select").on("click", ".character", function () {
+		// Saving the clicked character's name.
+		dude = $(this).attr("data-name");
+		console.log(dude);
+
+		if (charCounter > 0) {
+			charCounter = charCounter - 1;
+			updateCharacter(characters[dude], "#selected-characters");
+			updateCharacter(characters[dude], "#player-section");
+			renderInfo(characters[dude], ".character-menu");
+			console.log(characters[dude]);
+			renderMoveSet(dude, ".moveset-container");
+			$(this).hide();
+			console.log("this is where I create a button" + characters[dude].name);
+			cursor.play();
+		} else {
+			error.play();
+		}
+	});
+
+	//function to handle rendering game messages.
+	var renderMessage = function (message) {
+		// builds the message and appends it to the page 
+		var gameMessageSet = $("#game-message");
+		var newMessage = $("<div>").text(message);
+		gameMessageSet.append(newMessage);
+	};
+
+	// function to clear the game message action
+	var clearMessage = function () {
+		var gameMessage = $("#game-message");
+
+		gameMessage.text("");
+	};
+
+
+
+	// functions called
+
+	
+
+
+	initializeGame();
+
+
+
+
 	//-------API----------------------------------------------------------------
 
 	// World Clock API will be used to create a day/night cycle. May change over to one that can adapt local time if that's possible. 
@@ -413,7 +473,7 @@ $(document).ready(function () {
 	}).then(function (response) {
 		console.log(response);
 
-		$("#currentDateTime").innerHTML(response);
+		//$("#currentDateTime").innerHTML(response);
 	});
 
 
@@ -425,48 +485,15 @@ $(document).ready(function () {
 	}).then(function (geolocate) {
 		console.log(response);
 
-		//var longitude = response.location.lng;
-		//var latitude = response.location.lat;
+		var longitude = response.location.lng;
+		var latitude = response.location.lat;
 		$("#currentDateTime").innerHTML(response);
 
 	});
 
 
 
-	//-----location API
-
-	var APIKey = "166a433c57516f51dfab1f7edaed8413";
-
-	// Here we are building the URL we need to query the database
-	var weatherURL = "https://api.openweathermap.org/data/2.5/weather?" +
-		"lat=" + latitude + "&" + longitude + "=101&appid=" + APIKey;
-
-	// Here we run our AJAX call to the OpenWeatherMap API
-	$.ajax({
-			url: weatherURL,
-			method: "GET"
-		})
-		// We store all of the retrieved data inside of an object called "response"
-		.then(function (response) {
-
-			// Log the queryURL
-			console.log(queryURL);
-
-			// Log the resulting object	
-			console.log(response);
-
-			// Transfer content to HTML
-			$(".city").html("<h1>" + response.name + " Weather Details</h1>");
-			$(".wind").text("Wind Speed: " + response.wind.speed);
-			$(".humidity").text("Humidity: " + response.main.humidity);
-			$(".temp").text("Temperature (F) " + response.main.temp);
-
-			// Log the data in the console as well
-			console.log(response.name);
-			console.log("Wind Speed: " + response.wind.speed);
-			console.log("Humidity: " + response.main.humidity);
-			console.log("Temperature (F): " + response.main.temp);
-		});
+	
 
 
 	//-----Frame Transitions for content area-----------------------------------
@@ -496,9 +523,9 @@ $(document).ready(function () {
 		} else {
 			selectToggle = $("#team-character-select").detach();
 			$("#combat-arena").show("slow");
-			intro.pause();
-			growl.play();
-			battle1.play();
+			//intro.pause();
+			//growl.play();
+			//battle1.play();
 
 		}
 	});

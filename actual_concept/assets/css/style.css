@@ -339,7 +339,7 @@ input {
 	width: 30%;
 	height: 45%;
 	margin: auto;
-	margin-top: 11%;
+	margin-top: 9%;
 	margin-right: 5%;
 	border: 2px solid rgb(225, 0, 255);
 	display: inline-block;
@@ -349,7 +349,7 @@ input {
 	float: left;
 	width: 40%;
 	height: 60%;
-	margin-top: 2.5%;
+	margin-top: 2%;
 	margin-left: 15%;
 	border: 2px solid rgb(225, 0, 255);
 }
