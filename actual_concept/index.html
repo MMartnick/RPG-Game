@@ -5,7 +5,9 @@
 	<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="
 	    crossorigin="anonymous"></script>
 	<link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
-
+	<!--Reset CSS-->
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+	<!--Main CSS-->
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
 
 </head>
@@ -13,9 +15,8 @@
 <body>
 
 	<nav>
-		NavBar
+
 		<article id="demo"></article>
-		<article id="currentDateTime"></article>
 	</nav>
 	<div class="container">
 
@@ -51,36 +52,38 @@
 
 		<section id="character-select-screen">
 			<p class="select-button-contain">
-				<button id="char-select">Char Select</button>
+				<button id="char-select">Fight!</button>
 			</p>
 
 			<article id="team-character-select"></article>
 			<article id="selected-characters">
 				<p>Selected Fighters</p>
 			</article>
-
+			<article class="description-menu"></article>
 		</section>
 
 		<section id="combat-arena">
 			<article id="game-message"></article>
+			<button onclick="reload()" class="reset">Try Again</button>
 			<article id="player-section"></article>
 
 			<article id="enemy-section">
 			</article>
 			<article id="combat-menu">
 				<div class="moveset-container"></div>
+				<div class="enemy-menu"></div>
 				<div class="character-menu">
-				
-						<!--<button id="end-match">End Match</button>  Will be replaced, keeping for possible test use-->
+
+					<!--<button id="end-match">End Match</button>  Will be replaced, keeping for possible test use-->
 			</article>
 			</div>
 
 		</section>
 
-		</div>
+	</div>
 
 
-		<script src="assets/javascript/game.js"></script>
+	<script src="assets/javascript/game.js"></script>
 </body>
 
 </html>
