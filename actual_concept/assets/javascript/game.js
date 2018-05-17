@@ -11,33 +11,35 @@ function difficulty() {
 	document.getElementById("test").innerHTML = text;
 };
 
-
-
-var locate;
 var lat;
 var lon;
 var x = document.getElementById("demo");
 
 function getLocation() {
-	
+
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(showPosition);
-		lat = position.coords.latitude;
-		lon = position.coords.longitude;
+
 		locate = lat + lon;
 
 	} else {
 		x.innerHTML = "Geolocation is not supported by this browser.";
 	}
 
-console.log(locate);
 	return locate;
-	
+
 };
 
+
+
 function showPosition(position) {
-	x.innerHTML = "Latitude: " + Math.ceil(position.coords.latitude) +
-		"<br>Longitude: " + Math.ceil(position.coords.longitude);
+	x.innerHTML = "Latitude: " + position.coords.latitude +
+		"<br>Longitude: " + position.coords.longitude;
+
+	lat = Math.ceil(position.coords.latitude);
+	lon = Math.ceil(position.coords.longitude);
+	console.log(lat);
+	console.log(lon);
 };
 
 //-------API----------------------------------------------------------------
@@ -133,6 +135,7 @@ $(document).ready(function () {
 			enemyAttackBack: 15,
 			moveSet: {
 				attack: 40,
+				heal: 26,
 				jump: 16,
 				skill: {
 					lancet: 20,
@@ -150,10 +153,11 @@ $(document).ready(function () {
 			enemyAttackBack: 15,
 			moveSet: {
 				attack: 5,
+				heal: 25,
 				jump: 16,
 				skill: {
-					lancet: 20,
-					tornado: 27
+					braver: 20,
+					crossSlash: 27
 				},
 				defend: 0,
 			}
@@ -234,10 +238,13 @@ $(document).ready(function () {
 	// will be populated when player selects a character team
 
 	var dude;
-	//var badDude;
 	var charCounter = 2;
 	var killCount = 0;
 	var enemySelected;
+	var combatToggle;
+	var selectToggle;
+	var startToggle;
+	var currentEnemy;
 
 
 	//var combatTimer = setInterval(timer, speed);
@@ -266,7 +273,7 @@ $(document).ready(function () {
 
 	// designates which frame is shown on load
 	$("#game-start-screen").show();
-	$("#team-character-select").hide();
+	$("#character-select-screen").hide();
 	$("#combat-arena").hide();
 
 
@@ -311,9 +318,21 @@ $(document).ready(function () {
 		console.log(attackData);
 
 		$(renderArea).append(attack1);
-		//combat set up. 
+
+		// cure button render
+		var heal1 = $("<button>");
+		heal1.addClass("combat-heal");
+		heal1.attr("data-heal", character);
+		heal1.text("Cure");
+		// variable for testing to see that the character data renders a distinct button
+		var healData = heal1.attr("data-heal");
+		console.log(healData);
+
+		$(renderArea).append(heal1);
 
 	};
+
+
 	// renders character info to the DOM
 	var renderInfo = function (character, renderArea) {
 		var charInfoMenu = $("<div class='char-info-menu' data-name='" + character.name + "'>");
@@ -332,35 +351,69 @@ $(document).ready(function () {
 
 	};
 
-
-
-
-
-
-	var currentEnemy;
-
 	var getEnemy = function (latitude, longitude) {
+
 
 		if ((latitude == 60.295502) && (longitude == -97.7417479)) {
 			renderEnemy(enemyCharacters.spiderhouse, "#enemy-section");
 			renderInfo(enemyCharacters.spiderhouse, ".enemy-menu");
 			currentEnemy = enemyCharacters.spiderhouse;
 
-		} 
-		else if ((latitude == 31) && (longitude == -97)) {
+		} else if ((latitude == 31) && (longitude == -97)) {
 			renderEnemy(enemyCharacters.homeTest, "#enemy-section");
 			renderInfo(enemyCharacters.homeTest, ".enemy-menu");
 			currentEnemy = enemyCharacters.homeTest;
 
-		} 
-		else {
+		} else {
 			renderEnemy(enemyCharacters.Kefka, "#enemy-section");
 			renderInfo(enemyCharacters.Kefka, ".enemy-menu");
 			currentEnemy = enemyCharacters.Kefka;
 		}
 
 		return currentEnemy;
+		console.log(currentEnemy);
 	};
+
+	//function to handle rendering game messages.
+	var renderMessage = function (message) {
+		// builds the message and appends it to the page 
+		var gameMessageSet = $("#game-message");
+		var newMessage = $("<div>").text(message);
+		gameMessageSet.append(newMessage);
+	};
+
+	// function to clear the game message action
+	var clearMessage = function () {
+		var gameMessage = $("#game-message");
+
+		gameMessage.text("");
+	};
+
+	var initializeGame = function () {
+		$("#start-game").click(function () {
+
+			Math.ceil(lat);
+			Math.ceil(lon);
+			console.log(lat);
+			enemySelected = getEnemy(lat, lon);
+			console.log(lat);
+
+			console.log(enemySelected);
+			console.log(enemySelected.health);
+			// Loop through the characters object and call the renderCharacter function on each character to render their card
+			for (var key in characters) {
+				//renderInfo(characters[key], ".character-menu");
+				renderCharacter(characters[key], "#team-character-select");
+				//intro.play();
+				console.log(key);
+			};
+
+
+		});
+	};
+
+	// initiallizes the game
+	initializeGame();
 
 
 	// function for selecting characters
@@ -378,44 +431,81 @@ $(document).ready(function () {
 			renderMoveSet(dude, ".moveset-container");
 			$(this).hide();
 			console.log("this is where I create a button" + characters[dude].name);
-			cursor.play();
+			//cursor.play();
 		} else {
 			error.play();
 		}
 	});
 
-	//function to handle rendering game messages.
-	var renderMessage = function (message) {
-		// builds the message and appends it to the page 
-		var gameMessageSet = $("#game-message");
-		var newMessage = $("<div>").text(message);
-		gameMessageSet.append(newMessage);
-	};
+	//-----Frame Transitions for content area-----------------------------------
 
-	// function to clear the game message action
-	var clearMessage = function () {
-		var gameMessage = $("#game-message");
+	// Homepage begins on start screen with following screens hidden.
+	// this section is designated for those hidden sections and creates initial 
+	// function for section progression.
 
-		gameMessage.text("");
-	};
+	$("#start-game").click(function () {
+
+		if (startToggle) {
+			startToggle.appendTo("body");
+			startToggle = null;
+		} else {
+			startToggle = $("#game-start-screen").detach();
+			$("#character-select-screen").show("slow");
+		}
+	});
+
+	// Once characters are selected .click function proceeds to combat screen and detachs character select screen
+
+
+	$("#char-select").click(function () {
+
+		//document.getElementsByClassName(".character").classList.add(".character-combat");
+
+		//document.getElementsByClassName(".character-combat").classList.remove(".character");
+
+		if (selectToggle) {
+			selectToggle.appendTo("body");
+			selectToggle = null;
+		} else {
+			selectToggle = $("#character-select-screen").detach();
+			$("#combat-arena").show("slow");
+			$(".character-name").hide();
+			//intro.pause();
+			//growl.play();
+			//battle1.play();
+
+		}
+	});
+
+
+	$("#end-match").click(function () {
+		if (combatToggle) {
+			combatToggle.appendTo("body");
+			combatToggle = null;
+		} else {
+			combatToggle = $("#combat-arena").detach();
+			$("#game-start-screen").show("slow");
+		}
+	});
 
 
 
+	//----------End Frame Transitions-----------------------------------------
 
 	// when you click the attack button, run the following game logic
-	$(".combat-attack").on("click", function () {
+	$(".moveset-container").on("click", ".combat-attack", function () {
+		console.log(enemySelected.health);
 
 
 		var playerName = $(this).attr("data-type");
 		console.log(playerName, "Yo");
 		// creates messages for our attack and our opponents counter attack
-		var attackMessage = characters[playerName].name + enemySelected.name + "for" + characters[playerName].moveSet.attack + " damage.";
+		var attackMessage = characters[playerName].name + " hugged " + enemySelected.name + " for " + characters[playerName].moveSet.attack + " damage.";
 		var counterAttackMessage = enemySelected.name + " did " + enemySelected.attack + " damage.";
+		console.log(enemySelected);
 		clearMessage();
 
 		// Reduce defender's health by your attack value.
-
-
 
 		// If the enemey st has health
 		if (enemySelected.health > 0) {
@@ -432,16 +522,17 @@ $(document).ready(function () {
 			characters[playerName].health -= enemySelected.attack;
 			console.log(characters[playerName]);
 			console.log(characters[playerName].health);
-			//render the player's updated character card.
-			//updateCharacter(attacker, "#selected-character");
 
 
-			if (killCount < enemyCharacters.length && enemySelected.health <= 0) {
+
+
+			// For an ongoing string of enemies, future use
+			/*if (killCount < enemyCharacters.length && enemySelected.health <= 0) {
 				$(enemySelected).detach();
 				$(enemySelected).show("slow");
 				battle1.pause();
 				boss1.play();
-			}
+			}*/
 
 
 			// If you have less than zero health the game ends. 
@@ -455,7 +546,7 @@ $(document).ready(function () {
 		} else {
 			// if the enemy has less than zero health they are defeated
 			// remove your opponents character card. 
-			// $("#defender").empty();
+
 
 			var gameStateMessage = "You have defeated " + enemySelected.name;
 			renderMessage(gameStateMessage);
@@ -468,95 +559,26 @@ $(document).ready(function () {
 			if (killCount >= enemyCharacters.length) {
 				clearMessage();
 				$(".combat-attack").off("click");
-				//restartGame("You Won");
 				window.alert("You won!!!!");
 
 			}
 		}
-		// Increment turn counter. This is used for determining how much damage the player does.
-		// turnCounter++;
-		//} else {
-		// If there is no defender, render an error message
+
 		//clearMessage();
-		//renderMessage("No enemy here");
 
-		//}
+	});
+
+
+	// Cure button actions
+	$(".moveset-container").on("click", ".combat-heal", function () {
+		var playerName = $(this).attr("data-heal");
+		console.log(playerName, "Yo");
+		// creates messages for our attack and our opponents counter attack
+		var attackMessage = characters[playerName].name + "gained" + characters[playerName].moveSet.heal + " HP.";
+		characters[playerName].moveSet.heal += characters[playerName].moveSet.health;
+		clearMessage();
 	});
 
 
 
-
-
-
-	//-----Frame Transitions for content area-----------------------------------
-
-	// Homepage begins on start screen with following screens hidden.
-	// this section is designated for those hidden sections and creates initial 
-	// function for section progression.
-
-	var startToggle;
-	$("#start-game").click(function () {
-
-		if (startToggle) {
-			startToggle.appendTo("body");
-			startToggle = null;
-		} else {
-			startToggle = $("#game-start-screen").detach();
-			$("#team-character-select").show("slow");
-		}
-	});
-
-	// Once characters are selected .click function proceeds to combat screen and detachs character select screen
-
-	var selectToggle;
-	$("#char-select").click(function () {
-		enemySelected = getEnemy(lat, lon);
-
-		if (selectToggle) {
-			selectToggle.appendTo("body");
-			selectToggle = null;
-		} else {
-			selectToggle = $("#team-character-select").detach();
-			$("#combat-arena").show("slow");
-			//intro.pause();
-			//growl.play();
-			//battle1.play();
-
-		}
-	});
-
-
-	var combatToggle;
-	$("#end-match").click(function () {
-		if (combatToggle) {
-			combatToggle.appendTo("body");
-			combatToggle = null;
-		} else {
-			combatToggle = $("#combat-arena").detach();
-			$("#game-start-screen").show("slow");
-		}
-	});
-
-
-
-	//----------End Frame Transitions-----------------------------------------
-
-
-	// initiallizes the game
-	var initializeGame = function () {
-		$("#start-game").click(function () {
-			// Loop through the characters object and call the renderCharacter function on each character to render their card
-			for (var key in characters) {
-				//renderInfo(characters[key], ".character-menu");
-				renderCharacter(characters[key], "#team-character-select");
-				//intro.play();
-				console.log(key);
-			};
-
-
-		});
-	};
-
-
-	initializeGame();
 });
